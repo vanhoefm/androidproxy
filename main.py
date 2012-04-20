@@ -58,6 +58,7 @@ class ProxyServer(portforward.ProxyServer):
 
     def dataReceived(self, data):
         if not self.receivedfirst:
+            print socket.getsockopt(self.transport.fileno(), SOL_IP, SO_ORIGINAL_DST, 16)
             result = self.headerre.match(data)
 
             if (result != None and reversemappings.has_key(result.group(1))):
@@ -103,3 +104,4 @@ def main():
 if __name__ == "__main__":
     '(http://)?(\s+):(\d+)'
     main()
+
