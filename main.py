@@ -1,4 +1,3 @@
-# License: Refer to the LICENSE.TXT in the root directory
 import twisted
 from twisted.names import server, dns, client
 from twisted.internet import reactor, defer
@@ -58,6 +57,10 @@ class ProxyClient(portforward.ProxyClient):
             portforward.ProxyClient.dataReceived(self, data)
         else:
             # TODO: Verify that received data is indeed "HTTP/1.0 200 Connection established"
+            if not "HTTP/1.0 200 Connection established\r\n\r\n" in data:
+                print "Warning: Unexpected proxy reply: >", data[:30], "<"
+            else:
+                print "Proxy reply: >", data[:30], "<"
             self.gotestablished = True
             # Send original HTTPS request
             self.transport.write(self.requestdata)
@@ -80,6 +83,8 @@ class ProxyServer(portforward.ProxyServer):
     def dataReceived(self, data):
         if not self.receivedfirst:
 
+            print "INCOMING TCP CONN: >", data[:30], "<"
+
             dst = socket.getsockopt(self.transport.socket, SOL_IP, SO_ORIGINAL_DST, 16)
             srv_port, srv_ip = struct.unpack("!2xH4s8x", dst)
 
@@ -88,17 +93,20 @@ class ProxyServer(portforward.ProxyServer):
                 # We assume redirect traffic is not yet proxied, so add CONNECT command
                 self.peer.setRequestData(data)
                 data = "CONNECT " + inet_ntoa(srv_ip) + ":" + str(srv_port) + " HTTP/1.1\r\n\r\n"
+                print "PROXIFYING HTTPS: " + data.strip()
             # NOTE: If you uncomment this elif block, your proxy must support invisible proxying
             elif srv_port == 80:
                 # Rewrite to absolute GET request if info available
 		if reversemappings.has_key(inet_ntoa(srv_ip)):
                     data = re.sub(r'^GET ', "GET http://" + reversemappings[inet_ntoa(srv_ip)] + ":" + str(srv_port), data)
+                else:
+                    print "Warning: got redirected HTTP request but unable to find destination hostname:port !!"
             
             result = self.headerre.match(data)
 
             if (result != None and reversemappings.has_key(result.group(1))):
                 data = data.replace(result.group(1), reversemappings[result.group(1)])
-                print "PROXY:", result.group(1), "->", reversemappings[result.group(1)]
+                print "REWRITING CONNECT:", result.group(1), "->", reversemappings[result.group(1)]
             
             self.firstdata = data
             self.receivedfirst = True
