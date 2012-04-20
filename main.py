@@ -1,3 +1,4 @@
+# License: Refer to the LICENSE.TXT in the root directory
 import twisted
 from twisted.names import server, dns, client
 from twisted.internet import reactor, defer
