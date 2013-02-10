@@ -1,6 +1,0 @@
-This script is free for non-commercial usage only.
-
-The code is provided on an 'as-is’ basis , without warranties or conditions of any kind, express or implied,
-including without limitation any implied warranties or conditions of merchantability, fitness for a particular purpose,
-non-infringement and any warranties arising by statute or otherwise in law.
-

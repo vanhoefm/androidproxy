@@ -124,7 +124,7 @@ class ProxyFactory(portforward.ProxyFactory):
 
 
 def main():
-    print "AndroidProxy  ---   (C) Mathy Vanhoef (Made While Intern @ Ernst & Young)"
+    print "AndroidProxy  ---   (C) Mathy Vanhoef"
     print "This program comes with ABSOLUTELY NO WARRANTY."
     print
     print "DNS server will listen on localhost:65"
@@ -150,7 +150,6 @@ def main():
     endpoint = TCP4ServerEndpoint(reactor, 8007)
     endpoint.listen(ProxyFactory('localhost', 8080))
 
-    
     # Start DNS and TCP server
     reactor.run();
 
