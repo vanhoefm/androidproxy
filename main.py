@@ -194,7 +194,7 @@ def main():
 	print "AndroidProxy   ---   (C) Mathy Vanhoef"
 	print "This program comes with ABSOLUTELY NO WARRANTY."
 	print
-	print "DNS server will listen on localhost:65"
+	print "DNS server will listen on localhost:53"
 	print "HTTP Proxy will listen on localhost:8007"
 	print
 	#print "Physical device: Configure your computer dns server and as router (NOT as proxy) and execute"
