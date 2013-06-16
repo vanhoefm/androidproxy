@@ -111,9 +111,9 @@ class ProxyServer(portforward.ProxyServer):
 		# The first time we recieve data we must check for invisible proxiying and rewrite
 		# the CONNECT/GET requests to use the actual domain name.
 		if not self.receivedfirst:
-			print "INCOMING TCP CONN: >", repr(data) # repr(data[:30])
+			print "INCOMING TCP CONN: >", repr(data.split("\r")[0][:40])
 
-			# Of course invisible proxying is unnecessairy it the CONNECT command is actually used!
+			# Of course invisible proxying is unnecessairy if the CONNECT command is actually used!
 			
 			# ------------------------- Invisible Proxying Support ---------------------------
 			
@@ -175,7 +175,7 @@ class ProxyServer(portforward.ProxyServer):
 			self.firstdata = data
 			self.receivedfirst = True
 			
-			print "OUTGOING TCP CONN: >", repr(data) # repr(data[:30])
+			print "OUTGOING TCP: >", repr(data.split("\r")[0][:40])
 		
 		
 		# forward data
